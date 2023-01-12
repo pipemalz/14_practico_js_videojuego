@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Videogame</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container">
+        <div id="settings">
+            <span>Grid</span>
+            <input type="checkbox" id="grid" checked>
+            <span>Grid width</span>
+            <input type="range" id="gridWidth" min="1" max="5" value="1">
+        </div>
+        <canvas id="canvas"></canvas>
+        <div id="btns">
+            <button id="up">Arriba</button>
+            <button id="left">Izquierda</button>
+            <button id="right">Derecha</button>
+            <button id="down">Abajo</button>
+        </div>
+        <div id="messages">
+            <p id="lives"></p>
+            <p id="time"></p>
+            <p id="record"></p>
+        </div>
+    </div>
+    <script src="maps.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
