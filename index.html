@@ -10,10 +10,13 @@
 <body>
     <div id="container">
         <div id="settings">
-            <span>Grid</span>
-            <input type="checkbox" id="grid" checked>
-            <span>Grid width</span>
-            <input type="range" id="gridWidth" min="1" max="5" value="1">
+            <span id="settings-icon">⚙️</span>
+            <div id="settings-items" class="settings-inactive">
+                <span>Grid</span>
+                <input type="checkbox" id="grid">
+                <span>Grid width</span>
+                <input type="range" id="gridWidth" min="1" max="5" value="1">
+            </div>
         </div>
         <canvas id="canvas"></canvas>
         <div id="btns">

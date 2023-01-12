@@ -2,6 +2,12 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 const checkboxGrid = document.getElementById('grid');
 const rangeGridWidth = document.getElementById('gridWidth');
+const settingsIcon = document.getElementById('settings-icon');
+const settingsItems = document.getElementById('settings-items');
+
+settingsIcon.addEventListener('click', function(){
+    settingsItems.classList.toggle('settings-active');
+})
 
 window.addEventListener('resize', draw);
 checkboxGrid.addEventListener('click', draw);
@@ -47,20 +53,25 @@ function drawGrid(){
 };
 
 function getMap(index){
-    const columnas = maps[index].match(/[XIO\-]+/g);
-    return columnas.map(columna=> columna.split(''));
+    const rows = maps[index].match(/[XIO\-]+/g);
+    return rows.map(row=> row.split(''));
 }
 
 function drawElement(){
     const size = canvas.width / 10;
-    const map = getMap(0);
+    const map = getMap(2);
     context.font=`${size * 0.75}px sans-serif`;
     context.textAlign='left';
     context.textBaseline='top';
 
+    let responsiveY = 5;
+    if(canvas.width > 600){
+        responsiveY = 15;
+    }
+
     for(let x = 0; x < 10; x++){
         for(let y = 0; y < 10; y++){
-            context.fillText(emojis[map[y][x]], x * size, y * size);
+            context.fillText(emojis[map[y][x]], x * size, y * size + responsiveY);
         }
     }
 };
@@ -74,6 +85,4 @@ function draw(){
 
 function startGame() {
     draw();
-
 };
-

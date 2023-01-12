@@ -49,6 +49,33 @@ canvas {
     color: #F1AE1B;
 }
 
+#settings{
+    display: flex;
+    align-self: start;
+    gap: 10px;
+    color: indigo;
+    background-color: #F1AE1B;
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 5px;
+}
+
+#settings-icon{
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.settings-inactive{
+    display: none;
+}
+
+.settings-active{
+    display: flex;
+    align-items: center;
+    gap: 5px;   
+}
+
 #grid{
     width: 30px;
 }
