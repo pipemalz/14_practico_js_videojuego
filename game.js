@@ -15,8 +15,19 @@ const botones = {
 let startPosition = {};
 const playerPosition = {
         x : 0,
-        y : 0
+        y : 0,
+        xIndex : null,
+        yIndex : null
 };
+
+const positions = {};
+
+function setPositions(){
+    for(let i = 0; i < 10; i++){
+        positions[i] = (canvas.width / 10) * i;
+    }
+    console.log(positions);
+}
 
 function setListener(){
     //Listerners de renderizado
@@ -37,6 +48,15 @@ function setListener(){
 }
 
 //FUNCIONES DE RENDERIZADO
+
+function drawGame(){
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawCanvas();
+    drawGrid();
+    setPositions();
+    drawElement(2);
+    drawPlayer();
+};
 
 function drawCanvas(){
     let size = 800;
@@ -87,16 +107,11 @@ function drawElement(lvl){
     context.textAlign='left';
     context.textBaseline='top';
 
-    let responsiveY = 5;
-    if(canvas.width > 600){
-        responsiveY = 15;
-    }
-
     map.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
-            const x = colIndex * size;
-            const y = rowIndex * size;
-            context.fillText(emojis[col], x, y + responsiveY);
+            const x = positions[colIndex];
+            const y = positions[rowIndex];
+            context.fillText(emojis[col], x, y);
             if(col == 'O'){
                 if(startPosition != null){
                     startPosition = {
@@ -105,28 +120,18 @@ function drawElement(lvl){
                     };
                     playerPosition.x = x;
                     playerPosition.y = y;
-                    drawPlayer(x,y);
+                    playerPosition.xIndex = colIndex;
+                    playerPosition.yIndex = rowIndex;
+                    drawPlayer();
                 }
             };
         });
     });
 };
 
-function drawPlayer(x, y){
-    let responsiveY = 5;
-    if(canvas.width > 600){
-        responsiveY = 15;
-    }
-    context.fillText(emojis['PLAYER'], x, y + responsiveY);
+function drawPlayer(){
+    context.fillText(emojis['PLAYER'], positions[playerPosition.xIndex], positions[playerPosition.yIndex] );
 }
-
-function drawGame(){
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawCanvas();
-    drawGrid();
-    drawElement(1);
-    drawPlayer(playerPosition.x, playerPosition.y);
-};
 
 //FUNCIONES DE MOVIMIENTO
 
@@ -155,20 +160,20 @@ function moverJugador(direccion){
     if(direccion){
         startPosition = null;
         if(direccion == 'Arriba'){
-            if(playerPosition.y != 0){
-                playerPosition.y -= size;
+            if(playerPosition.yIndex > 0){
+                playerPosition.yIndex--;
             }
         }else if(direccion == 'Abajo'){
-            if(playerPosition.y != canvas.height - size){
-                playerPosition.y += size;
+            if(playerPosition.yIndex < 9){
+                playerPosition.yIndex++;
             }
         }else if(direccion == 'Derecha'){
-            if(playerPosition.x != (canvas.width - size)){
-                playerPosition.x += size;
+            if(playerPosition.xIndex < 9){
+                playerPosition.xIndex++;
             }
         }else if(direccion == 'Izquierda'){
-            if(playerPosition.x != 0){
-                playerPosition.x -= size;
+            if(playerPosition.xIndex > 0){
+                playerPosition.xIndex--;
             }
         }
     };
