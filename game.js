@@ -19,16 +19,8 @@ const playerPosition = {
         xIndex : null,
         yIndex : null
 };
-
 const positions = {};
-
-function setPositions(){
-    for(let i = 0; i < 10; i++){
-        positions[i] = (canvas.width / 10) * i;
-    }
-    console.log(positions);
-}
-
+let level = 1;
 function setListener(){
     //Listerners de renderizado
     window.addEventListener('resize', drawGame);
@@ -46,6 +38,8 @@ function setListener(){
         settingsItems.classList.toggle('settings-active');
     });
 }
+const bombPositions = []
+let giftPosition = {}
 
 //FUNCIONES DE RENDERIZADO
 
@@ -54,7 +48,7 @@ function drawGame(){
     drawCanvas();
     drawGrid();
     setPositions();
-    drawElement(2);
+    drawElement(level);
     drawPlayer();
 };
 
@@ -107,11 +101,16 @@ function drawElement(lvl){
     context.textAlign='left';
     context.textBaseline='top';
 
+    let responsiveY = 5;
+    if(canvas.width > 600){
+        responsiveY = 15;
+    }
+    let bombCount = 0;
     map.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
             const x = positions[colIndex];
             const y = positions[rowIndex];
-            context.fillText(emojis[col], x, y);
+            context.fillText(emojis[col], x, y + responsiveY);
             if(col == 'O'){
                 if(startPosition != null){
                     startPosition = {
@@ -124,16 +123,57 @@ function drawElement(lvl){
                     playerPosition.yIndex = rowIndex;
                     drawPlayer();
                 }
+            }else if(col == 'X'){
+                bombPositions[bombCount] = {x: x, y: y, xIndex: colIndex, yIndex: rowIndex};
+                bombCount++;
+            }else if(col == 'I'){
+                giftPosition = {x: x, y: y, xIndex: colIndex, yIndex: rowIndex};
             };
         });
     });
 };
 
 function drawPlayer(){
-    context.fillText(emojis['PLAYER'], positions[playerPosition.xIndex], positions[playerPosition.yIndex] );
+    let responsiveY = 5;
+    if(canvas.width > 600){
+        responsiveY = 15;
+    }
+    
+    const state = detectarColision();
+
+    let emoji = null;
+
+    if(state === 'DEAD'){
+        emoji = 'BOMB_COLLISION';
+    }else if(state === 'WIN'){
+        emoji = 'WIN';
+    }else{
+        emoji = 'PLAYER';
+    }
+
+    context.fillText(emojis[emoji], positions[playerPosition.xIndex], positions[playerPosition.yIndex] + responsiveY );
 }
 
 //FUNCIONES DE MOVIMIENTO
+function detectarColision(){
+    let collision = false;
+    if(playerPosition.xIndex === giftPosition.xIndex && playerPosition.yIndex === giftPosition.yIndex){
+        collision = 'WIN';
+    }else{
+        bombPositions.forEach(bomb => {
+            if(bomb.xIndex === playerPosition.xIndex && bomb.yIndex === playerPosition.yIndex){
+                collision = 'DEAD';
+            }
+        });
+    }
+    return collision;
+}
+
+function setPositions(){
+    for(let i = 0; i < 10; i++){
+        positions[i] = (canvas.width / 10) * i;
+    }
+}
 
 function detectarMovimiento(e){
     if(e.code){
@@ -156,7 +196,6 @@ function detectarMovimiento(e){
 };
     
 function moverJugador(direccion){
-    const size = canvas.width / 10;
     if(direccion){
         startPosition = null;
         if(direccion == 'Arriba'){
