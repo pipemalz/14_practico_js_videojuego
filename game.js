@@ -12,7 +12,7 @@ const botones = {
     'Izquierda' : document.getElementById('left'),
     'Derecha' : document.getElementById('right'),
 };
-let startPosition = {};
+let startPosition = true;
 const playerPosition = {
         x : 0,
         y : 0,
@@ -20,7 +20,7 @@ const playerPosition = {
         yIndex : null
 };
 const positions = {};
-let level = 1;
+let level = 0;
 function setListener(){
     //Listerners de renderizado
     window.addEventListener('resize', drawGame);
@@ -44,6 +44,7 @@ let giftPosition = {}
 //FUNCIONES DE RENDERIZADO
 
 function drawGame(){
+    detectarColision();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawCanvas();
     drawGrid();
@@ -112,11 +113,7 @@ function drawElement(lvl){
             const y = positions[rowIndex];
             context.fillText(emojis[col], x, y + responsiveY);
             if(col == 'O'){
-                if(startPosition != null){
-                    startPosition = {
-                        x : x,
-                        y : y
-                    };
+                if(startPosition){
                     playerPosition.x = x;
                     playerPosition.y = y;
                     playerPosition.xIndex = colIndex;
@@ -139,17 +136,17 @@ function drawPlayer(){
         responsiveY = 15;
     }
     
-    const state = detectarColision();
+    // const state = detectarColision();
 
     let emoji = null;
 
-    if(state === 'DEAD'){
-        emoji = 'BOMB_COLLISION';
-    }else if(state === 'WIN'){
-        emoji = 'WIN';
-    }else{
+    // if(state === 'DEAD'){
+    //     emoji = 'BOMB_COLLISION';
+    // }else if(state === 'WIN'){
+    //     emoji = 'WIN';
+    // }else{
         emoji = 'PLAYER';
-    }
+    // }
 
     context.fillText(emojis[emoji], positions[playerPosition.xIndex], positions[playerPosition.yIndex] + responsiveY );
 }
@@ -158,16 +155,36 @@ function drawPlayer(){
 function detectarColision(){
     let collision = false;
     if(playerPosition.xIndex === giftPosition.xIndex && playerPosition.yIndex === giftPosition.yIndex){
-        collision = 'WIN';
+        winLevel();
     }else{
         bombPositions.forEach(bomb => {
             if(bomb.xIndex === playerPosition.xIndex && bomb.yIndex === playerPosition.yIndex){
-                collision = 'DEAD';
+                loseLevel();
             }
         });
     }
     return collision;
 }
+
+function winLevel(){
+    if(level < (maps.length-1)){
+        bombPositions.splice(0, bombPositions.length);
+        level++;
+        startPosition = true;
+    }else if (level == (maps.length - 1)){
+        winGame();
+    }
+}
+
+function loseLevel(){
+    bombPositions.splice(0, bombPositions.length);
+    startPosition = true;
+}
+
+function winGame(){
+    alert('TERMINASTE EL JUEGO, FELICIDADES.')
+}
+
 
 function setPositions(){
     for(let i = 0; i < 10; i++){
@@ -197,7 +214,7 @@ function detectarMovimiento(e){
     
 function moverJugador(direccion){
     if(direccion){
-        startPosition = null;
+        startPosition = false;
         if(direccion == 'Arriba'){
             if(playerPosition.yIndex > 0){
                 playerPosition.yIndex--;
@@ -225,3 +242,5 @@ function startGame() {
 };
 
 window.addEventListener('load', startGame);
+
+let bombCount = 0;

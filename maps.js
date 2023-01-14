@@ -52,4 +52,22 @@ maps.push(`
   XX-----OXX
   XXXXXXXXXX
 `);
+maps.push(`
+  O--------X
+  XXXXXXXX-X
+  X--------X
+  XXX-XXXXXX
+  XXX-XXXXXX
+  XXX---XXXX
+  XXXXX-XXXX
+  ----X-XXXX
+  -XX---XXXX
+  -IXXXXXXXX
+`);
+
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
 
