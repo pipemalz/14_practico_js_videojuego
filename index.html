@@ -9,13 +9,20 @@
 </head>
 <body>
     <div id="container">
-        <div id="settings">
-            <span id="settings-icon">⚙️</span>
-            <div id="settings-items" class="settings-inactive">
-                <span>Grid</span>
-                <input type="checkbox" id="grid" checked>
-                <span>Grid width</span>
-                <input type="range" id="gridWidth" min="1" max="5" value="1">
+        <div id="hud">
+            <div id="settings">
+                <span id="settings-icon">⚙️</span>
+                <div id="settings-items" class="settings-inactive">
+                    <span>Grid</span>
+                    <input type="checkbox" id="grid" checked>
+                    <span>Grid width</span>
+                    <input type="range" id="gridWidth" min="1" max="5" value="1">
+                </div>
+            </div>
+            <div id="player-stats">
+                <p id="lives"></p>
+                <p id="time">🕒</p>
+                <p id="record">🏁</p>
             </div>
         </div>
         <canvas id="canvas"></canvas>
@@ -24,11 +31,6 @@
             <button id="left">Izquierda</button>
             <button id="right">Derecha</button>
             <button id="down">Abajo</button>
-        </div>
-        <div id="messages">
-            <p id="lives"></p>
-            <p id="time"></p>
-            <p id="record"></p>
         </div>
     </div>
     <script src="maps.js"></script>

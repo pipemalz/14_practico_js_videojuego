@@ -27,15 +27,16 @@ canvas {
 
 #btns {
     width: 100%;
-    display: flex;
+    display: none;
     justify-content: space-around;
+    gap: 5px;
 }
 
 #btns button {
     width: 25%;
-    background-color: #F1AE1B;
-    border: 3px solid indigo;
-    color: indigo;
+    background-color: indigo;
+    border: 3px solid #F1AE1B;
+    color: #F1AE1B;
     font-weight: bold;
     letter-spacing: 1px;
     font-size: 24px;
@@ -44,14 +45,14 @@ canvas {
 }
 
 #btns button:hover{
-    background-color:indigo;
-    border: 3px solid #F1AE1B;
-    color: #F1AE1B;
+    background-color:#F1AE1B;
+    color: indigo;
 }
 
-#settings{
+#hud{
+    width: 100%;
     display: flex;
-    align-self: start;
+    justify-content: space-between;
     gap: 10px;
     color: indigo;
     background-color: #F1AE1B;
@@ -59,6 +60,11 @@ canvas {
     font-weight: bold;
     text-transform: uppercase;
     border-radius: 5px;
+}
+
+#settings{
+    display:flex;
+    gap: 20px;
 }
 
 #settings-icon{
@@ -74,6 +80,10 @@ canvas {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+#player-stats{
+    display: flex;
 }
 
 #grid{

@@ -1,17 +1,18 @@
 //DECLARACION DE VARIABLES
-
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 const checkboxGrid = document.getElementById('grid');
 const rangeGridWidth = document.getElementById('gridWidth');
 const settingsIcon = document.getElementById('settings-icon');
 const settingsItems = document.getElementById('settings-items');
+const livesContainer = document.getElementById('lives');
 const botones = {
     'Arriba' : document.getElementById('up'),
     'Abajo' : document.getElementById('down'),
     'Izquierda' : document.getElementById('left'),
     'Derecha' : document.getElementById('right'),
 };
+
 let startPosition = true;
 const playerPosition = {
         x : 0,
@@ -21,6 +22,10 @@ const playerPosition = {
 };
 const positions = {};
 let level = 0;
+const bombPositions = []
+let giftPosition = {}
+let lives = 3;
+
 function setListener(){
     //Listerners de renderizado
     window.addEventListener('resize', drawGame);
@@ -38,19 +43,21 @@ function setListener(){
         settingsItems.classList.toggle('settings-active');
     });
 }
-const bombPositions = []
-let giftPosition = {}
 
 //FUNCIONES DE RENDERIZADO
 
 function drawGame(){
-    detectarColision();
     context.clearRect(0, 0, canvas.width, canvas.height);
+    detectarColision();
+    print();
     drawCanvas();
     drawGrid();
     setPositions();
     drawElement(level);
     drawPlayer();
+    if (lives == 0){
+        loseGame();
+    }
 };
 
 function drawCanvas(){
@@ -151,6 +158,32 @@ function drawPlayer(){
     context.fillText(emojis[emoji], positions[playerPosition.xIndex], positions[playerPosition.yIndex] + responsiveY );
 }
 
+function drawRestart(background,text){
+    context.fillStyle='indigo';
+    context.fillRect(positions[2],positions[2],positions[6],positions[4]);
+    context.font = `${positions[1]}px sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'center';
+    context.fillText(emojis['GAME_OVER'], positions[5], positions[2]*1.1);
+    context.fillStyle='#F1AE1B';
+    context.font = `${positions[1]}px sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'top';
+    context.fillText('PERDISTE', positions[5], positions[3]*1.1);
+    //Cuadro texto reintentar
+    context.fillStyle=`${background}`;
+    context.fillRect(positions[3],positions[4]*1.1,positions[4],positions[1]*0.6);
+    //Texto Reintentar
+    context.fillStyle=`${text}`;
+    context.font = `${positions[1]*0.3}px sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'top';
+    context.fillText('REINTENTAR', positions[5], positions[4]*1.14);
+    //Borde reintentar
+    context.strokeStyle=`#F1AE1B`;
+    context.strokeRect(positions[3],positions[4]*1.1,positions[4],positions[1]*0.6);
+}
+
 //FUNCIONES DE MOVIMIENTO
 function detectarColision(){
     let collision = false;
@@ -177,14 +210,32 @@ function winLevel(){
 }
 
 function loseLevel(){
-    bombPositions.splice(0, bombPositions.length);
-    startPosition = true;
+    if(lives > 0){
+        bombPositions.splice(0, bombPositions.length);
+        startPosition = true;
+        lives--;
+    }
 }
 
 function winGame(){
-    alert('TERMINASTE EL JUEGO, FELICIDADES.')
+    context.fillStyle='indigo';
+    context.fillRect(positions[2],positions[2],positions[6],positions[4]);
+    context.fillStyle='#F1AE1B';
+    context.font = `${positions[1]}px sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText('PERDISTE', positions[5], positions[4]);
 }
 
+function loseGame(){
+    const restartButon = {
+        startX: positions[3],
+        startY: positions[4]*1.1,
+        endX: positions[3] + positions[4],
+        endY: positions[4]*1.1 + positions[1]*0.6
+    }
+    restartGame(restartButon);
+}
 
 function setPositions(){
     for(let i = 0; i < 10; i++){
@@ -213,7 +264,7 @@ function detectarMovimiento(e){
 };
     
 function moverJugador(direccion){
-    if(direccion){
+    if(direccion && lives > 0){
         startPosition = false;
         if(direccion == 'Arriba'){
             if(playerPosition.yIndex > 0){
@@ -232,9 +283,60 @@ function moverJugador(direccion){
                 playerPosition.xIndex--;
             }
         }
+        drawGame();
     };
-    drawGame();
 };
+
+//FUNCIONES DE IMPRESION EN DOM
+
+function print(){
+    livesContainer.innerHTML = '';
+    for(let i = 1; i <= lives; i++){
+        const span = document.createElement('span');
+        span.innerText = '💖';
+        livesContainer.appendChild(span);
+    }
+}
+
+function restartGame(restartButon){
+    drawRestart('#F1AE1B','indigo');
+    canvas.addEventListener('click', event => {
+        const clickX = event.clientX - canvas.getBoundingClientRect().x;
+        const clickY = event.clientY- canvas.getBoundingClientRect().y;
+        if(
+            clickX >= restartButon.startX &&
+            clickX <= restartButon.endX &&
+            clickY >= restartButon.startY &&
+            clickY <= restartButon.endY
+        ){  
+            if(lives <= 0){
+                startPosition = true;
+                level = 0;
+                lives = 3;
+                drawGame();
+                canvas.style.cursor = 'default';
+            }
+        }
+    });
+    canvas.addEventListener('mousemove', event => {
+        const clickX = event.clientX - canvas.getBoundingClientRect().x;
+        const clickY = event.clientY- canvas.getBoundingClientRect().y;
+        if(lives <= 0){
+            if(
+                clickX >= restartButon.startX &&
+                clickX <= restartButon.endX &&
+                clickY >= restartButon.startY &&
+                clickY <= restartButon.endY
+            ){
+                drawRestart('indigo','#F1AE1B');
+                canvas.style.cursor = 'pointer';
+            }else{
+                drawRestart('#F1AE1B','indigo');
+                canvas.style.cursor = 'default'
+            }
+        }
+    });
+}
 
 function startGame() {
     setListener();
