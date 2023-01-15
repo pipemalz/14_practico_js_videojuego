@@ -84,6 +84,11 @@ canvas {
 
 #player-stats{
     display: flex;
+    gap: 10px;
+}
+
+#time{
+    min-width: 80px;
 }
 
 #grid{

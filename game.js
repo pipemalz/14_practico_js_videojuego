@@ -6,6 +6,8 @@ const rangeGridWidth = document.getElementById('gridWidth');
 const settingsIcon = document.getElementById('settings-icon');
 const settingsItems = document.getElementById('settings-items');
 const livesContainer = document.getElementById('lives');
+const timeContainer = document.getElementById('time-played');
+const recordContainer = document.getElementById('current-record');
 const botones = {
     'Arriba' : document.getElementById('up'),
     'Abajo' : document.getElementById('down'),
@@ -13,6 +15,9 @@ const botones = {
     'Derecha' : document.getElementById('right'),
 };
 
+let intervalo = 0;
+let timeStart = 30000;
+let timePlayed = 0;
 let startPosition = true;
 const playerPosition = {
         x : 0,
@@ -130,6 +135,7 @@ function drawElement(lvl){
             }else if(col == 'X'){
                 bombPositions[bombCount] = {x: x, y: y, xIndex: colIndex, yIndex: rowIndex};
                 bombCount++;
+                
             }else if(col == 'I'){
                 giftPosition = {x: x, y: y, xIndex: colIndex, yIndex: rowIndex};
             };
@@ -184,7 +190,7 @@ function drawRestart(background,text){
     context.strokeRect(positions[3],positions[4]*1.1,positions[4],positions[1]*0.6);
 }
 
-//FUNCIONES DE MOVIMIENTO
+//FUNCIONES DE MOVIMIENTO Y POSICION
 function detectarColision(){
     let collision = false;
     if(playerPosition.xIndex === giftPosition.xIndex && playerPosition.yIndex === giftPosition.yIndex){
@@ -192,49 +198,12 @@ function detectarColision(){
     }else{
         bombPositions.forEach(bomb => {
             if(bomb.xIndex === playerPosition.xIndex && bomb.yIndex === playerPosition.yIndex){
+                collision = true;
                 loseLevel();
             }
         });
     }
     return collision;
-}
-
-function winLevel(){
-    if(level < (maps.length-1)){
-        bombPositions.splice(0, bombPositions.length);
-        level++;
-        startPosition = true;
-    }else if (level == (maps.length - 1)){
-        winGame();
-    }
-}
-
-function loseLevel(){
-    if(lives > 0){
-        bombPositions.splice(0, bombPositions.length);
-        startPosition = true;
-        lives--;
-    }
-}
-
-function winGame(){
-    context.fillStyle='indigo';
-    context.fillRect(positions[2],positions[2],positions[6],positions[4]);
-    context.fillStyle='#F1AE1B';
-    context.font = `${positions[1]}px sans-serif`;
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText('PERDISTE', positions[5], positions[4]);
-}
-
-function loseGame(){
-    const restartButon = {
-        startX: positions[3],
-        startY: positions[4]*1.1,
-        endX: positions[3] + positions[4],
-        endY: positions[4]*1.1 + positions[1]*0.6
-    }
-    restartGame(restartButon);
 }
 
 function setPositions(){
@@ -290,12 +259,51 @@ function moverJugador(direccion){
 //FUNCIONES DE IMPRESION EN DOM
 
 function print(){
-    livesContainer.innerHTML = '';
-    for(let i = 1; i <= lives; i++){
-        const span = document.createElement('span');
-        span.innerText = '💖';
-        livesContainer.appendChild(span);
+    livesContainer.innerHTML = '💖'.repeat(lives);
+}
+
+//FUNCIONES DE MECANICAS
+
+function winLevel(){
+    if(level < (maps.length-1)){
+        bombPositions.splice(0, bombPositions.length);
+        level++;
+        startPosition = true;
+    }else if (level == (maps.length - 1)){
+        winGame();
     }
+}
+
+function loseLevel(){
+    if(lives > 0){
+        bombPositions.splice(0, bombPositions.length);
+        startPosition = true;
+        lives--;
+    }
+}
+
+function winGame(){
+    const record = localStorage.getItem('record');
+    clearInterval(intervalo);
+    if(record){
+        if(timePlayed < record){
+            localStorage.setItem('record', timePlayed);
+            console.log('Record Superado.');
+        }
+    }else{
+        console.log('Record Superado.');
+    }
+}
+
+function loseGame(){
+    const restartButon = {
+        startX: positions[3],
+        startY: positions[4]*1.1,
+        endX: positions[3] + positions[4],
+        endY: positions[4]*1.1 + positions[1]*0.6
+    }
+    clearInterval(intervalo);
+    restartGame(restartButon);
 }
 
 function restartGame(restartButon){
@@ -313,7 +321,7 @@ function restartGame(restartButon){
                 startPosition = true;
                 level = 0;
                 lives = 3;
-                drawGame();
+                startGame();
                 canvas.style.cursor = 'default';
             }
         }
@@ -341,6 +349,15 @@ function restartGame(restartButon){
 function startGame() {
     setListener();
     drawGame();
+    timeStart = Date.now();
+    intervalo = setInterval(function(){
+        timePlayed = Date.now() - timeStart;
+        timeContainer.innerText = `${timePlayed/1000}`;
+    })
+    const record = localStorage.getItem('record');
+    if(record){
+        recordContainer.innerText = record;
+    }
 };
 
 window.addEventListener('load', startGame);
