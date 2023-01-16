@@ -5,34 +5,59 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Videogame</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vivid-icons@1.0.10" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/54fc4db703.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div id="container">
-        <div id="hud">
-            <div id="settings">
-                <span id="settings-icon">⚙️</span>
-                <div id="settings-items" class="settings-inactive">
-                    <span>Grid</span>
-                    <input type="checkbox" id="grid" checked>
-                    <span>Grid width</span>
-                    <input type="range" id="gridWidth" min="1" max="5" value="1">
+    <section class="game-menu">
+        <h1 class="game-menu__title">
+            A Videogame 
+            <i data-vi="controller" data-vi-primary="white" data-vi-accent="purple" data-vi-prop="#CEFAFF"></i>
+        </h1>
+        <div class="game-menu__play">
+            <i class="fa-solid fa-play"></i>
+        </div>
+    </section>
+    <section class="game">
+        <div id="container">
+            <div id="hud">
+                <div id="settings">
+                    <span id="settings-icon">⚙️</span>
+                    <div id="settings-items" class="settings-inactive">
+                        <span>Grid</span>
+                        <input type="checkbox" id="grid" checked>
+                        <span>Grid width</span>
+                        <input type="range" id="gridWidth" min="1" max="5" value="1">
+                    </div>
+                </div>
+                <div id="player-stats">
+                    <p id="lives"></p>
+                    <p id="time">🕒<span id="time-played"></span></p>
+                    <p id="record">🏁<span id="current-record"></span></p>
                 </div>
             </div>
-            <div id="player-stats">
-                <p id="lives"></p>
-                <p id="time">🕒<span id="time-played"></span></p>
-                <p id="record">🏁<span id="current-record"></span></p>
+            <canvas id="game-canvas"></canvas>
+            <div id="btns">
+                <button id="up">Arriba</button>
+                <button id="left">Izquierda</button>
+                <button id="right">Derecha</button>
+                <button id="down">Abajo</button>
             </div>
         </div>
-        <canvas id="canvas"></canvas>
-        <div id="btns">
-            <button id="up">Arriba</button>
-            <button id="left">Izquierda</button>
-            <button id="right">Derecha</button>
-            <button id="down">Abajo</button>
+    </section>
+    <section class="game-over game-over--inactive">
+        <h1 class="game-over__title">
+            Game Over 💀
+        </h1>
+        <div class="game-over__play">
+            <h2>Try Again</h2>
+            <i class="fa-solid fa-play"></i>
         </div>
-    </div>
+    </section>
     <script src="maps.js"></script>
     <script src="game.js"></script>
 </body>

@@ -5,24 +5,102 @@
 }
 
 body{
+    position: relative;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: indigo;
+    background-color: black;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.game-menu{
+    position: absolute;
+    z-index: 2;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.game-menu__title{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    vertical-align: middle;
+}
+
+.game-menu__play{
+    text-align: center;
+    font-size: 70px;
+}
+
+.game-menu__play i:hover{
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
+.game-menu--inactive{
+    transform: translateY(-100%);
+    transition-duration: 1s;
+}
+
+.game{
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+}
+
+.game--active {
+    opacity: 1;
+    transition-delay: 1s;
+    transition-duration: 1s;
+}
+
+.game-over{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 36px;
+}
+
+.game-over__play{
+    display: flex;
+    text-align: center;
+    gap: 20px;
+    font-size: 24px;
+    width: fit-content;
+    align-self: center;
+    padding: 16px;
+    border-radius: 8px;
+}
+.game-over__play i{
+    font-size: 36px;
+}
+.game-over__play:hover{
+    cursor: pointer;
+    border: 1px solid white;
+}
+.game-over--inactive{
+    display: none;
 }
 
 canvas {
-    background-color:#F1AE1B;
-    /* border: 5px solid #AF6844; */
+    border: 2px solid white;
 }
+
+
 
 #container{
     width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
 }
 
 #btns {
@@ -54,8 +132,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    color: indigo;
-    background-color: #F1AE1B;
+    color: white;
     padding: 10px;
     font-weight: bold;
     text-transform: uppercase;
@@ -89,6 +166,9 @@ canvas {
 
 #time{
     min-width: 80px;
+}
+#time-played{
+    font-size: 12px;
 }
 
 #grid{

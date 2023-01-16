@@ -1,5 +1,5 @@
 //DECLARACION DE VARIABLES
-const canvas = document.getElementById('canvas');
+const canvas = document.getElementById('game-canvas');
 const context = canvas.getContext('2d');
 const checkboxGrid = document.getElementById('grid');
 const rangeGridWidth = document.getElementById('gridWidth');
@@ -14,6 +14,15 @@ const botones = {
     'Izquierda' : document.getElementById('left'),
     'Derecha' : document.getElementById('right'),
 };
+const menuContainer = document.querySelector('.game-menu');
+const playBtn = document.querySelector('.fa-solid.fa-play');
+const gameContainer = document.querySelector('.game');
+
+playBtn.addEventListener('click', () =>{
+    menuContainer.classList.add('game-menu--inactive');
+    gameContainer.classList.add('game--active');
+    startGame();
+});
 
 let intervalo = 0;
 let timeStart = 30000;
@@ -85,7 +94,7 @@ function drawGrid(){
     context.lineWidth = rangeGridWidth.value;
     
     if(checkboxGrid.checked){
-        context.strokeStyle='indigo';
+        context.strokeStyle='white';
     }else{
         context.strokeStyle='transparent';
     };
@@ -165,13 +174,13 @@ function drawPlayer(){
 }
 
 function drawRestart(background,text){
-    context.fillStyle='indigo';
+    context.fillStyle='black';
     context.fillRect(positions[2],positions[2],positions[6],positions[4]);
     context.font = `${positions[1]}px sans-serif`;
     context.textAlign = 'center';
     context.textBaseline = 'center';
     context.fillText(emojis['GAME_OVER'], positions[5], positions[2]*1.1);
-    context.fillStyle='#F1AE1B';
+    context.fillStyle='white';
     context.font = `${positions[1]}px sans-serif`;
     context.textAlign = 'center';
     context.textBaseline = 'top';
@@ -186,7 +195,7 @@ function drawRestart(background,text){
     context.textBaseline = 'top';
     context.fillText('REINTENTAR', positions[5], positions[4]*1.14);
     //Borde reintentar
-    context.strokeStyle=`#F1AE1B`;
+    context.strokeStyle=`white`;
     context.strokeRect(positions[3],positions[4]*1.1,positions[4],positions[1]*0.6);
 }
 
@@ -291,6 +300,7 @@ function winGame(){
             console.log('Record Superado.');
         }
     }else{
+        localStorage.setItem('record', timePlayed);
         console.log('Record Superado.');
     }
 }
@@ -307,7 +317,7 @@ function loseGame(){
 }
 
 function restartGame(restartButon){
-    drawRestart('#F1AE1B','indigo');
+    drawRestart('black', 'white');
     canvas.addEventListener('click', event => {
         const clickX = event.clientX - canvas.getBoundingClientRect().x;
         const clickY = event.clientY- canvas.getBoundingClientRect().y;
@@ -336,10 +346,10 @@ function restartGame(restartButon){
                 clickY >= restartButon.startY &&
                 clickY <= restartButon.endY
             ){
-                drawRestart('indigo','#F1AE1B');
+                drawRestart('white', 'black');
                 canvas.style.cursor = 'pointer';
             }else{
-                drawRestart('#F1AE1B','indigo');
+                drawRestart('black', 'white');
                 canvas.style.cursor = 'default'
             }
         }
@@ -349,17 +359,15 @@ function restartGame(restartButon){
 function startGame() {
     setListener();
     drawGame();
-    timeStart = Date.now();
-    intervalo = setInterval(function(){
-        timePlayed = Date.now() - timeStart;
-        timeContainer.innerText = `${timePlayed/1000}`;
-    })
-    const record = localStorage.getItem('record');
-    if(record){
-        recordContainer.innerText = record;
-    }
+    setTimeout(function(){
+        timeStart = Date.now();
+        intervalo = setInterval(function(){
+            timePlayed = Date.now() - timeStart;
+            timeContainer.innerText = `${timePlayed/1000}`;
+        })
+    }, 1000);
+ 
 };
 
-window.addEventListener('load', startGame);
-
 let bombCount = 0;
+
