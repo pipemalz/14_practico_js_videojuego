@@ -17,6 +17,9 @@ const botones = {
 const menuContainer = document.querySelector('.game-menu');
 const playBtn = document.querySelector('.fa-solid.fa-play');
 const gameContainer = document.querySelector('.game');
+const gameOverContainer = document.querySelector('.game-over');
+const restartButton = document.querySelector('.game-over__play');
+const countdownContainer = document.getElementById('countdown');
 
 playBtn.addEventListener('click', () =>{
     menuContainer.classList.add('game-menu--inactive');
@@ -56,6 +59,10 @@ function setListener(){
     settingsIcon.addEventListener('click', function(){
         settingsItems.classList.toggle('settings-active');
     });
+
+    //Reiniciar Juego
+    restartButton.addEventListener('click', restartGame)
+
 }
 
 //FUNCIONES DE RENDERIZADO
@@ -306,68 +313,96 @@ function winGame(){
 }
 
 function loseGame(){
-    const restartButon = {
-        startX: positions[3],
-        startY: positions[4]*1.1,
-        endX: positions[3] + positions[4],
-        endY: positions[4]*1.1 + positions[1]*0.6
-    }
     clearInterval(intervalo);
-    restartGame(restartButon);
+    showGameOverScreeen();
 }
 
-function restartGame(restartButon){
-    drawRestart('black', 'white');
-    canvas.addEventListener('click', event => {
-        const clickX = event.clientX - canvas.getBoundingClientRect().x;
-        const clickY = event.clientY- canvas.getBoundingClientRect().y;
-        if(
-            clickX >= restartButon.startX &&
-            clickX <= restartButon.endX &&
-            clickY >= restartButon.startY &&
-            clickY <= restartButon.endY
-        ){  
-            if(lives <= 0){
-                startPosition = true;
-                level = 0;
-                lives = 3;
-                startGame();
-                canvas.style.cursor = 'default';
-            }
-        }
-    });
-    canvas.addEventListener('mousemove', event => {
-        const clickX = event.clientX - canvas.getBoundingClientRect().x;
-        const clickY = event.clientY- canvas.getBoundingClientRect().y;
-        if(lives <= 0){
-            if(
-                clickX >= restartButon.startX &&
-                clickX <= restartButon.endX &&
-                clickY >= restartButon.startY &&
-                clickY <= restartButon.endY
-            ){
-                drawRestart('white', 'black');
-                canvas.style.cursor = 'pointer';
-            }else{
-                drawRestart('black', 'white');
-                canvas.style.cursor = 'default'
-            }
-        }
-    });
+function showGameOverScreeen(){
+    gameContainer.classList.remove('game--active');
+    gameContainer.classList.add('game--inactive');
+    gameOverContainer.classList.remove('game-over--inactive');
+    gameOverContainer.classList.add('game-over--active');
+    // drawRestart('black', 'white');
+    // canvas.addEventListener('click', event => {
+    //     const clickX = event.clientX - canvas.getBoundingClientRect().x;
+    //     const clickY = event.clientY- canvas.getBoundingClientRect().y;
+    //     if(
+    //         clickX >= restartButon.startX &&
+    //         clickX <= restartButon.endX &&
+    //         clickY >= restartButon.startY &&
+    //         clickY <= restartButon.endY
+    //     ){  
+    //         if(lives <= 0){
+    //             startPosition = true;
+    //             level = 0;
+    //             lives = 3;
+    //             startGame();
+    //             canvas.style.cursor = 'default';
+    //         }
+    //     }
+    // });
+    // canvas.addEventListener('mousemove', event => {
+    //     const clickX = event.clientX - canvas.getBoundingClientRect().x;
+    //     const clickY = event.clientY- canvas.getBoundingClientRect().y;
+    //     if(lives <= 0){
+    //         if(
+    //             clickX >= restartButon.startX &&
+    //             clickX <= restartButon.endX &&
+    //             clickY >= restartButon.startY &&
+    //             clickY <= restartButon.endY
+    //         ){
+    //             drawRestart('white', 'black');
+    //             canvas.style.cursor = 'pointer';
+    //         }else{
+    //             drawRestart('black', 'white');
+    //             canvas.style.cursor = 'default'
+    //         }
+    //     }
+    // });
 }
+
+function restartGame(){
+    gameOverContainer.classList.remove('game-over--active');
+    gameOverContainer.classList.add('game-over--inactive');
+    gameContainer.classList.remove('game--inactive');
+    gameContainer.classList.add('game--active');
+    timeContainer.innerText = '';
+    if(lives <= 0){
+    startPosition = true;
+    level = 0;
+    lives = 3;
+    startGame();
+    }
+}
+
+function countdown(){
+    countdownContainer.classList.remove('countdown--inactive');
+    countdownContainer.innerText = 3;
+    setTimeout(
+        function(){
+            countdownContainer.innerText = 2;
+            setTimeout(
+                function(){
+                    countdownContainer.innerText = 1;
+                    setTimeout(
+                        function(){
+                        countdownContainer.classList.add('countdown--inactive');
+                        timeStart = Date.now();
+                        intervalo = setInterval(function(){
+                            timePlayed = Date.now() - timeStart;
+                            timeContainer.innerText = `${timePlayed/1000}`;
+                        })
+                        setListener();
+                    }, 1000);
+                }, 1000
+            );
+        }, 1000
+    );
+};
 
 function startGame() {
-    setListener();
     drawGame();
-    setTimeout(function(){
-        timeStart = Date.now();
-        intervalo = setInterval(function(){
-            timePlayed = Date.now() - timeStart;
-            timeContainer.innerText = `${timePlayed/1000}`;
-        })
-    }, 1000);
- 
+    countdown();
 };
 
 let bombCount = 0;
-

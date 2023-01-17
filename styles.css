@@ -16,6 +16,8 @@ body{
     font-family: 'Press Start 2P', cursive;
 }
 
+/* GAME MENU STYLE */
+
 .game-menu{
     position: absolute;
     z-index: 2;
@@ -31,6 +33,7 @@ body{
     display: flex;
     align-items: center;
     gap: 20px;
+    font-size: 48px;
     vertical-align: middle;
 }
 
@@ -45,59 +48,31 @@ body{
 }
 
 .game-menu--inactive{
-    transform: translateY(-100%);
-    transition-duration: 1s;
-}
-
-.game{
-    position: absolute;
-    opacity: 0;
-    z-index: 1;
-}
-
-.game--active {
-    opacity: 1;
-    transition-delay: 1s;
-    transition-duration: 1s;
-}
-
-.game-over{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    font-size: 36px;
-}
-
-.game-over__play{
-    display: flex;
-    text-align: center;
-    gap: 20px;
-    font-size: 24px;
-    width: fit-content;
-    align-self: center;
-    padding: 16px;
-    border-radius: 8px;
-}
-.game-over__play i{
-    font-size: 36px;
-}
-.game-over__play:hover{
-    cursor: pointer;
-    border: 1px solid white;
-}
-.game-over--inactive{
     display: none;
 }
 
-canvas {
-    border: 2px solid white;
+/* GAME CANVAS STYLE */
+
+.game{
+    position: absolute;
+    z-index: 1;
 }
 
+.game--inactive{
+    display: none;
+}
 
+.game--active {
+    display: flex;
+}
+
+#game-canvas {
+    /* border: 2px solid white; */
+}
 
 #container{
-    width: 800px;
+    position: relative;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -175,6 +150,54 @@ canvas {
     width: 30px;
 }
 
+#countdown{
+    position: absolute;
+    font-size: 96px;
+    top: 50%;
+}
+
+.countdown--inactive{
+    display: none;
+}
+
+/* GAME OVER STYLES */
+
+.game-over{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 36px;
+    z-index: 3;
+}
+
+.game-over__play{
+    display: flex;
+    text-align: center;
+    gap: 20px;
+    font-size: 24px;
+    width: fit-content;
+    align-self: center;
+    padding: 16px;
+    border-radius: 8px;
+}
+.game-over__title{
+    font-size: 48px;
+}
+.game-over__play i{
+    font-size: 36px;
+}
+.game-over__play:hover{
+    cursor: pointer;
+    border: 1px solid white;
+}
+.game-over--inactive{
+    display: none;
+}
+.game-over--active{
+    display: flex;
+}
+
 @media screen and (max-width: 600px), screen and(max-height: 600px){
     #btns button {
         font-size: 18px;
@@ -188,5 +211,17 @@ canvas {
 @media screen and (max-width: 400px), screen and(max-height: 400px){
     #btns button {
         font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 620px){
+    .game-menu__title, .game-over__title{
+        font-size: 36px;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .game-menu__title, .game-over__title{
+        font-size: 24px;
     }
 }

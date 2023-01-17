@@ -22,14 +22,14 @@
             <i class="fa-solid fa-play"></i>
         </div>
     </section>
-    <section class="game">
+    <section class="game game--inactive">
         <div id="container">
             <div id="hud">
                 <div id="settings">
                     <span id="settings-icon">⚙️</span>
                     <div id="settings-items" class="settings-inactive">
                         <span>Grid</span>
-                        <input type="checkbox" id="grid" checked>
+                        <input type="checkbox" id="grid" >
                         <span>Grid width</span>
                         <input type="range" id="gridWidth" min="1" max="5" value="1">
                     </div>
@@ -41,6 +41,7 @@
                 </div>
             </div>
             <canvas id="game-canvas"></canvas>
+            <div id="countdown"></div>
             <div id="btns">
                 <button id="up">Arriba</button>
                 <button id="left">Izquierda</button>
