@@ -54,12 +54,12 @@ maps.push(`
 `);
 maps.push(`
   O--------X
-  XXXXXXXX-X
-  X--------X
-  XXX-XXXXXX
-  XXX-XXXXXX
-  XXX---XXXX
-  XXXXX-XXXX
+  -XXXXXXX-X
+  ---------X
+  -XX-XXXXXX
+  -XX-XXXXXX
+  -XX---XXXX
+  -XXXX-XXXX
   ----X-XXXX
   -XX---XXXX
   -IXXXXXXXX
